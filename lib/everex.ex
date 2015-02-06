@@ -1,0 +1,2 @@
+defmodule Evernote do
+end
