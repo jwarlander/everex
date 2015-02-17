@@ -1,5 +1,7 @@
 defmodule EverexTest do
   use ExUnit.Case
+  require Everex.NoteStore
+  require Record
 
   @developer_token System.get_env("EN_DEVELOPER_TOKEN")
 
@@ -13,5 +15,33 @@ defmodule EverexTest do
     [prefix, postfix] = String.split(url, ~r"/s[0-9]+/")
     assert prefix == "https://sandbox.evernote.com/shard"
     assert postfix == "notestore"
+  end
+
+  test "list tags" do
+    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
+    {:ok, tags} = Everex.NoteStore.list_tags(client)
+    case Enum.count(tags) do
+      0 -> true
+      _else -> 
+        first = Enum.at(tags, 0)
+        assert Record.is_record(first, :Tag)
+    end
+  end
+
+  test "list notebooks" do
+    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
+    {:ok, notebooks} = Everex.NoteStore.list_notebooks(client)
+    case Enum.count(notebooks) do
+      0 -> true
+      _else -> 
+        first = Enum.at(notebooks, 0)
+        assert Record.is_record(first, :Notebook)
+    end
+  end
+
+  test "find note metadata" do
+    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
+    {:ok, notes} = Everex.NoteStore.find_notes_metadata(client)
+    assert Record.is_record(notes, :NotesMetadataList)
   end
 end
