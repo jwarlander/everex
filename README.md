@@ -3,6 +3,9 @@ Everex
 
 Evernote API client for Elixir. Uses the Erlang Thrift library.
 
+_*NOTE:* Everex is UNDER DEVELOPMENT, and is NOT ready for production use.
+Feedback and contributions (via pull requests) are very welcome, of course!_
+
 It's so far possible to list tags, list notebooks, find notes, and retrieve
 note data.
 
