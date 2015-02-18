@@ -1,10 +1,16 @@
 Everex
 ======
 
-Evernote API client for Elixir. Uses the Erlang Thrift library.
+Evernote API client for Elixir. Uses a modified version of the
+[Erlang Thrift library](https://github.com/apache/thrift/tree/master/lib/erl),
+together with compiled output from the
+[Evernote Cloud API IDL files](https://github.com/evernote/evernote-thrift).
 
-_*NOTE:* Everex is UNDER DEVELOPMENT, and is NOT ready for production use.
+_**NOTE:** Everex is UNDER DEVELOPMENT, and is NOT ready for production use.
 Feedback and contributions (via pull requests) are very welcome, of course!_
+
+Status
+------
 
 It's so far possible to list tags, list notebooks, find notes, and retrieve
 note data.
@@ -14,8 +20,8 @@ user token retrieved
 [using OAuth](https://dev.evernote.com/doc/articles/authentication.php)
 or a [developer token](https://sandbox.evernote.com/api/DeveloperToken.action).
 
-EXAMPLE
--------
+Examples
+--------
 
     iex(1)> require Everex.NoteStore      
     nil
@@ -49,7 +55,7 @@ EXAMPLE
        :undefined, :undefined, :undefined, :undefined, :undefined, :undefined,
        :undefined, :undefined, :undefined}, :undefined}}
 
-TESTING
+Testing
 -------
 
 For testing, you'll need an Evernote Sandbox account and a personal
