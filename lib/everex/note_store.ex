@@ -18,22 +18,22 @@ defmodule Everex.NoteStore do
 
   Record.defrecord :note_filter, :NoteFilter,
     Record.extract(:NoteFilter,
-      from_lib: "edam/include/note_store_types.hrl")
+      from: "include/note_store_types.hrl")
 
   Record.defrecord :notes_metadata_result_spec, :NotesMetadataResultSpec,
     Record.extract(:NotesMetadataResultSpec,
-      from_lib: "edam/include/note_store_types.hrl")
+      from: "include/note_store_types.hrl")
 
   Record.defrecord :notes_metadata_list, :NotesMetadataList,
     Record.extract(:NotesMetadataList,
-      from_lib: "edam/include/note_store_types.hrl")
+      from: "include/note_store_types.hrl")
 
   Record.defrecord :note_metadata, :NoteMetadata,
     Record.extract(:NoteMetadata,
-      from_lib: "edam/include/note_store_types.hrl")
+      from: "include/note_store_types.hrl")
 
   Record.defrecord :note, :Note,
-    Record.extract(:Note, from_lib: "edam/include/types_types.hrl")
+    Record.extract(:Note, from: "include/types_types.hrl")
 
   def list_notebooks(client) do
     GenServer.call(client, {:notestore, :listNotebooks, []})

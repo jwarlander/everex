@@ -16,10 +16,10 @@ defmodule Everex.Mixfile do
       package: [
         contributors: ["Johan Wärlander"],
         licenses: ["Apache 2.0"],
-        links: %{ github: "https://github.com/jwarlander/everex" },
+        links: %{ "GitHub": "https://github.com/jwarlander/everex" },
         files: [ 
           "lib", "priv", "mix.exs", "README*", "LICENSE*",
-          "CHANGELOG*", "erl_src"
+          "CHANGELOG*", "include", "src"
         ],
      ],
      deps: deps]
@@ -29,7 +29,7 @@ defmodule Everex.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger, :thrift]]
+    [applications: [:logger, :ssl, :inets]]
   end
 
   # Dependencies can be Hex packages:
@@ -42,9 +42,6 @@ defmodule Everex.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [
-      {:thrift, path: "erl_src/thrift"},
-      {:edam, path: "erl_src/edam"},
-    ]
+    [ ]
   end
 end
