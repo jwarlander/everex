@@ -6,7 +6,13 @@ defmodule Everex.Mixfile do
       app: :everex,
       version: "0.0.1",
       elixir: "~> 1.0",
-      description: "Evernote API client for Elixir",
+      description: """
+      Evernote API client for Elixir
+
+      NOTE: Everex is UNDER DEVELOPMENT, and is NOT ready for production use.
+      Feedback and contributions (via pull requests) are very welcome, of
+      course!
+      """,
       package: [
         contributors: ["Johan Wärlander"],
         licenses: ["Apache 2.0"],

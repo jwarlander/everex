@@ -20,8 +20,35 @@ user token retrieved
 [using OAuth](https://dev.evernote.com/doc/articles/authentication.php)
 or a [developer token](https://sandbox.evernote.com/api/DeveloperToken.action).
 
+_Everex doesn't help at all with the OAuth process for getting access to
+accounts; you'll have to solve that yourself, for the time being, and then
+just supply the authentication token when creating the client connection._
+
+Usage
+-----
+
+Add Everex to your dependencies in `mix.exs`:
+
+```elixir
+  defp deps do
+    [{:everex, github: "jwarlander/everex"}]
+  end
+```
+
+You also need to include `:everex` in your application list:
+
+```elixir
+  def application do
+    [applications: [:everex]]
+  end
+
+```
+
 Examples
 --------
+
+_**NOTE:** It's assumed that you're testing in the Evernote Sandbox, with a
+developer token._
 
     iex(1)> require Everex.NoteStore      
     nil
