@@ -1,6 +1,7 @@
 ToDo
 ====
 
+-   Do something useful when auth_token is missing in Client.new()
 -   Mock the Thrift calls for unit testing
 -   Add separate integration tests?
 -   Add calls to get / set application data on notes
