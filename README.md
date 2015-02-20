@@ -31,7 +31,7 @@ Add Everex to your dependencies in `mix.exs`:
 
 ```elixir
   defp deps do
-    [{:everex, github: "jwarlander/everex"}]
+    [{:everex, "~> 0.0.1"}]
   end
 ```
 
