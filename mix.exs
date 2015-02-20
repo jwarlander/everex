@@ -5,6 +5,12 @@ defmodule Everex.Mixfile do
     [app: :everex,
      version: "0.0.1",
      elixir: "~> 1.0",
+     description: "Evernote API client for Elixir",
+     package: [
+       contributors: ["Johan Wärlander"],
+       licenses: ["Apache 2.0"],
+       links: %{ github: "https://github.com/jwarlander/everex" }
+     ],
      deps: deps]
   end
 
