@@ -2,14 +2,19 @@ defmodule Everex.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :everex,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     description: "Evernote API client for Elixir",
-     package: [
-       contributors: ["Johan Wärlander"],
-       licenses: ["Apache 2.0"],
-       links: %{ github: "https://github.com/jwarlander/everex" }
+    [
+      app: :everex,
+      version: "0.0.1",
+      elixir: "~> 1.0",
+      description: "Evernote API client for Elixir",
+      package: [
+        contributors: ["Johan Wärlander"],
+        licenses: ["Apache 2.0"],
+        links: %{ github: "https://github.com/jwarlander/everex" },
+        files: [ 
+          "lib", "priv", "mix.exs", "README*", "LICENSE*",
+          "CHANGELOG*", "erl_src"
+        ],
      ],
      deps: deps]
   end
