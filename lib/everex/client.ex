@@ -36,27 +36,15 @@ defmodule Everex.Client do
 
   def init(state = %__MODULE__{server: srv}) do
     {:ok, client} = thrift_client_util(srv, "/edam/user", :user_store_thrift)
-    { :ok, %{state | user_client: client}, 0 }
+    { :ok, %{state | user_client: client} }
   end
 
-  def handle_info(:timeout, state = %__MODULE__{user_client: user_client}) do
-    response = :thrift_client.call(
-      user_client, :getNoteStoreUrl, [state.auth_token]
-    )
-    case response do
-      {user_client, {:ok, url}} ->
-        [base, path] = String.split(url, ~r"/shard/")
-        srv = String.replace(base, "https://", "")
-        {:ok, note_client} = thrift_client_util(
-          srv, "/shard/" <> path, :note_store_thrift
-        )
-        { :noreply, %{state | user_client: user_client, note_client: note_client} }
-      _else ->
-        # TODO: retrying notestore connection; log something..
-        { :noreply, %{state | user_client: user_client}, 5000 }
-    end
+  def handle_call(call = {:notestore, _, _}, from,
+                  state = %__MODULE__{note_client: nil})
+  do
+    {:ok, state} = connect(state)
+    handle_call(call, from, state)
   end
-
   def handle_call({:notestore, thrift_call, thrift_opts}, _from, state)
   when is_atom(thrift_call) and is_list(thrift_opts)
   do
@@ -76,6 +64,23 @@ defmodule Everex.Client do
   end
 
   ## Private Functions
+
+  defp connect(state = %__MODULE__{user_client: user_client}) do
+    response = :thrift_client.call(
+      user_client, :getNoteStoreUrl, [state.auth_token]
+    )
+    case response do
+      {user_client, {:ok, url}} ->
+        [base, path] = String.split(url, ~r"/shard/")
+        srv = String.replace(base, "https://", "")
+        {:ok, note_client} = thrift_client_util(
+          srv, "/shard/" <> path, :note_store_thrift
+        )
+        { :ok, %{state | user_client: user_client, note_client: note_client} }
+      {user_client, error} ->
+        { :error, %{state | user_client: user_client}, error}
+    end
+  end
 
   defp thrift_client_util(srv, path, module) when is_binary(srv) do
     thrift_client_util(String.to_char_list(srv), path, module)
