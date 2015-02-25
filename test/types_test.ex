@@ -15,14 +15,12 @@
 #
 defmodule EverexTypesTest do
   use ExUnit.Case
-
-  require Everex.Types.Note
-  alias Everex.Types.Note
+  use Evernote.EDAM.Types
 
   test "note record is the same as a note struct" do
-    note_record = Note.note(title: "Foo Bar")
-    note_struct = %Note{title: "Foo Bar"}
-    assert Note.to_record(note_struct) == note_record
-    assert Note.new(note_record) == note_struct
+    note_record = Types.Note.record(title: "Foo Bar")
+    note_struct = %Types.Note{title: "Foo Bar"}
+    assert Types.Note.to_record(note_struct) == note_record
+    assert Types.Note.new(note_record) == note_struct
   end
 end

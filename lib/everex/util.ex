@@ -14,7 +14,13 @@
 # limitations under the License.
 #
 defmodule Everex.Util do
-  require Record
+
+  defmacro __using__(_options) do
+    quote do
+      require Record
+      require Everex.Util
+    end
+  end
 
   def struct_to_record(the_struct, record_def, tag) do
     [ tag | do_struct_to_record(the_struct, record_def, []) ]
@@ -28,4 +34,31 @@ defmodule Everex.Util do
     do_struct_to_record(the_struct, tail, [the_struct[key]|acc])
   end
 
+  defmacro deftype(mod, record, opts) do
+    quote do
+      defmodule unquote(mod) do
+        @derive [Access, Collectable]
+        defstruct Record.extract(unquote(record), unquote(opts))
+
+        Record.defrecord :record,
+          unquote(record),
+          Record.extract(unquote(record), unquote(opts))
+
+        def new(template)
+        when Record.is_record(template, unquote(record))
+        do
+          record(template)
+          |> Enum.into(%__MODULE__{})
+        end
+
+        def to_record(map = %__MODULE__{}) do
+          map
+          |> Everex.Util.struct_to_record(
+              Record.extract(unquote(record), unquote(opts)),
+              unquote(record)
+          )
+        end
+      end
+    end
+  end
 end

@@ -14,24 +14,16 @@
 # limitations under the License.
 #
 
-defmodule Everex.Types do
-  require Record
+defmodule Evernote.EDAM.Types do
+  use Everex.Util
 
-  defmodule Note do
-  @note_record Record.extract(:Note, from: "include/types_types.hrl")
-
-    @derive [Access, Collectable]
-    defstruct Record.extract(:Note, from: "include/types_types.hrl")
-
-    Record.defrecord :note, :Note,
-      Record.extract(:Note, from: "include/types_types.hrl")
-
-    def new(record) when Record.is_record(record, :Note) do
-      note(record) |> Enum.into(%Note{}) 
-    end
-
-    def to_record(note = %Note{}) do
-      Everex.Util.struct_to_record(note, @note_record, :Note)
+  defmacro __using__(_options) do
+    quote do
+      alias Evernote.EDAM.Types
+      require Types.Note
     end
   end
+
+  Everex.Util.deftype Note, :Note, from: "include/types_types.hrl"
+
 end
