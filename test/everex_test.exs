@@ -73,6 +73,6 @@ defmodule EverexTest do
 
     {:ok, note} = NoteStore.get_note(client, noteguid)
 
-    assert Record.is_record(note, :Note)
+    assert note.__struct__ == Evernote.EDAM.Types.Note
   end
 end

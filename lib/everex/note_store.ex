@@ -15,6 +15,7 @@
 #
 defmodule Everex.NoteStore do
   require Record
+  use Evernote.EDAM.Types
 
   Record.defrecord :note_filter, :NoteFilter,
     Record.extract(:NoteFilter,
@@ -61,9 +62,13 @@ defmodule Everex.NoteStore do
                with_resources_recognition \\ false,
                with_resources_alternate_data \\ false)
   do
-    GenServer.call(client, {:notestore, :getNote, [
+    response = GenServer.call(client, {:notestore, :getNote, [
         guid, with_content, with_resources_data, with_resources_recognition,
         with_resources_alternate_data
       ]})
+    case response do
+      {:ok, note} -> {:ok, Types.Note.new(note)}
+      error -> error
+    end
   end
 end
