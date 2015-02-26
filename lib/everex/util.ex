@@ -19,6 +19,7 @@ defmodule Everex.Util do
     quote do
       require Record
       require Everex.Util
+      import Everex.Util, only: [deftype: 3]
     end
   end
 
@@ -36,6 +37,24 @@ defmodule Everex.Util do
 
   defmacro deftype(mod, record, opts) do
     quote do
+      def record_to_struct(the_record)
+      when Record.is_record(the_record, unquote(record))
+      do
+        record_def = Record.extract(unquote(record), unquote(opts))
+        record_values = the_record |> Tuple.to_list |> Enum.drop(1)
+        do_record_to_struct(unquote(record), record_values, record_def,
+                            struct(__MODULE__.unquote(mod)))
+      end
+
+      defp do_record_to_struct(unquote(record), [], [], acc), do: acc
+      defp do_record_to_struct(
+        unquote(record), [value|vt], [{key,:undefined}|dt], acc
+      ) do
+        do_record_to_struct(
+          unquote(record), vt, dt, struct(acc,[{key, value}])
+        )
+      end
+
       defmodule unquote(mod) do
         @derive [Access, Collectable]
         defstruct Record.extract(unquote(record), unquote(opts))
@@ -43,13 +62,6 @@ defmodule Everex.Util do
         Record.defrecord :record,
           unquote(record),
           Record.extract(unquote(record), unquote(opts))
-
-        def new(template)
-        when Record.is_record(template, unquote(record))
-        do
-          record(template)
-          |> Enum.into(%__MODULE__{})
-        end
 
         def to_record(map = %__MODULE__{}) do
           map
