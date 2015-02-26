@@ -23,6 +23,16 @@ defmodule Everex.Util do
     end
   end
 
+  def record_to_struct(the_record, fields, struct_name) do
+    [_tag | values] = the_record |> Tuple.to_list
+    do_record_to_struct(values, fields, struct(struct_name))
+  end
+
+  defp do_record_to_struct([], [], acc), do: acc
+  defp do_record_to_struct([value|vt], [{key,:undefined}|dt], acc) do
+    do_record_to_struct(vt, dt, struct(acc,[{key, value}]))
+  end
+
   def struct_to_record(the_struct, record_def, tag) do
     [ tag | do_struct_to_record(the_struct, record_def, []) ]
     |> List.to_tuple
@@ -37,21 +47,12 @@ defmodule Everex.Util do
 
   defmacro deftype(mod, record, opts) do
     quote do
-      def record_to_struct(the_record)
+      def to_struct(the_record)
       when Record.is_record(the_record, unquote(record))
       do
-        record_def = Record.extract(unquote(record), unquote(opts))
-        record_values = the_record |> Tuple.to_list |> Enum.drop(1)
-        do_record_to_struct(unquote(record), record_values, record_def,
-                            struct(__MODULE__.unquote(mod)))
-      end
-
-      defp do_record_to_struct(unquote(record), [], [], acc), do: acc
-      defp do_record_to_struct(
-        unquote(record), [value|vt], [{key,:undefined}|dt], acc
-      ) do
-        do_record_to_struct(
-          unquote(record), vt, dt, struct(acc,[{key, value}])
+        fields = Record.extract(unquote(record), unquote(opts))
+        the_record |> Everex.Util.record_to_struct(
+          fields, __MODULE__.unquote(mod)
         )
       end
 

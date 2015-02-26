@@ -21,6 +21,6 @@ defmodule EverexTypesTest do
     note_record = Types.Note.record(title: "Foo Bar")
     note_struct = %Types.Note{title: "Foo Bar"}
     assert Types.Note.to_record(note_struct) == note_record
-    assert Types.record_to_struct(note_record) == note_struct
+    assert Types.to_struct(note_record) == note_struct
   end
 end

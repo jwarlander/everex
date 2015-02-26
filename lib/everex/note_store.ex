@@ -67,7 +67,7 @@ defmodule Everex.NoteStore do
         with_resources_alternate_data
       ]})
     case response do
-      {:ok, note} -> {:ok, Types.Note.new(note)}
+      {:ok, note} -> {:ok, Types.to_struct(note)}
       error -> error
     end
   end
