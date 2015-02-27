@@ -61,17 +61,15 @@ defmodule EverexTest do
   test "find note metadata" do
     {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
     {:ok, notes} = Everex.NoteStore.find_notes_metadata(client)
-    assert Record.is_record(notes, :NotesMetadataList)
+    assert notes.__struct__ == Evernote.EDAM.Types.NotesMetadataList
   end
 
   test "get note" do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
     {:ok, notelist} = NoteStore.find_notes_metadata(client)
-    noteguid = NoteStore.notes_metadata_list(notelist, :notes)
-                |> Enum.at(0)
-                |> NoteStore.note_metadata(:guid)
+    notemeta = notelist.notes |> Enum.at(0)
 
-    {:ok, note} = NoteStore.get_note(client, noteguid)
+    {:ok, note} = NoteStore.get_note(client, notemeta.guid)
 
     assert note.__struct__ == Evernote.EDAM.Types.Note
   end

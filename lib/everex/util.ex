@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 defmodule Everex.Util do
+  require Record
 
   defmacro __using__(_options) do
     quote do
@@ -29,8 +30,26 @@ defmodule Everex.Util do
   end
 
   defp do_record_to_struct([], [], acc), do: acc
+  # value is record; convert to struct
+  defp do_record_to_struct([value|vt], [{key,:undefined}|dt], acc)
+  when Record.is_record(value)
+  do
+    acc = struct(acc,[{key, Evernote.EDAM.Types.to_struct(value)}])
+    do_record_to_struct(vt, dt, acc)
+  end
+  # value is list; process and convert contents to structs if needed
+  defp do_record_to_struct([value|vt], [{key,[]}|dt], acc) do
+    value = r2s_process_list(value, [])
+    do_record_to_struct(vt, dt, struct(acc,[{key, value}]))
+  end
+  # it's just a regular type, update struct key with the value
   defp do_record_to_struct([value|vt], [{key,:undefined}|dt], acc) do
     do_record_to_struct(vt, dt, struct(acc,[{key, value}]))
+  end
+
+  defp r2s_process_list([], acc), do: Enum.reverse(acc)
+  defp r2s_process_list([head|tail], acc) when Record.is_record(head) do
+    r2s_process_list(tail, [Evernote.EDAM.Types.to_struct(head)|acc])
   end
 
   def struct_to_record(the_struct, record_def, tag) do

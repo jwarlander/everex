@@ -1,6 +1,7 @@
 ToDo
 ====
 
+-   Make struct_to_record() handle embedded structs, direcly and in lists
 -   Do something useful when auth_token is missing in Client.new()
 -   Mock the Thrift calls for unit testing
 -   Add separate integration tests?

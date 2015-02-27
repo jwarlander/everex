@@ -17,25 +17,6 @@ defmodule Everex.NoteStore do
   require Record
   use Evernote.EDAM.Types
 
-  Record.defrecord :note_filter, :NoteFilter,
-    Record.extract(:NoteFilter,
-      from: "include/note_store_types.hrl")
-
-  Record.defrecord :notes_metadata_result_spec, :NotesMetadataResultSpec,
-    Record.extract(:NotesMetadataResultSpec,
-      from: "include/note_store_types.hrl")
-
-  Record.defrecord :notes_metadata_list, :NotesMetadataList,
-    Record.extract(:NotesMetadataList,
-      from: "include/note_store_types.hrl")
-
-  Record.defrecord :note_metadata, :NoteMetadata,
-    Record.extract(:NoteMetadata,
-      from: "include/note_store_types.hrl")
-
-  Record.defrecord :note, :Note,
-    Record.extract(:Note, from: "include/types_types.hrl")
-
   def list_notebooks(client) do
     GenServer.call(client, {:notestore, :listNotebooks, []})
   end
@@ -45,14 +26,19 @@ defmodule Everex.NoteStore do
   end
 
   def find_notes_metadata(client,
-                          filter \\ note_filter(),
+                          filter \\ %Types.NoteFilter{},
                           offset \\ 0,
                           max_notes \\ 100,
-                          result_spec \\ notes_metadata_result_spec())
+                          result_spec \\ %Types.NotesMetadataResultSpec{})
   do
-    GenServer.call(client, {:notestore, :findNotesMetadata, [
-        filter, offset, max_notes, result_spec
+    response = GenServer.call(client, {:notestore, :findNotesMetadata, [
+        Types.to_record(filter), offset, max_notes,
+        Types.to_record(result_spec)
       ]})
+    case response do
+      {:ok, note} -> {:ok, Types.to_struct(note)}
+      error -> error
+    end
   end
 
   def get_note(client,
