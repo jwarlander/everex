@@ -20,7 +20,7 @@ defmodule EverexTypesTest do
   test "note record is the same as a note struct" do
     note_record = Types.Note.record(title: "Foo Bar")
     note_struct = %Types.Note{title: "Foo Bar"}
-    assert Types.Note.to_record(note_struct) == note_record
+    assert Types.to_record(note_struct) == note_record
     assert Types.to_struct(note_record) == note_struct
   end
 end

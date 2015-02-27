@@ -45,32 +45,24 @@ defmodule Everex.Util do
     do_struct_to_record(the_struct, tail, [the_struct[key]|acc])
   end
 
-  defmacro deftype(mod, record, opts) do
+  defmacro deftype(mod, tag, fields) do
     quote do
-      def to_struct(the_record)
-      when Record.is_record(the_record, unquote(record))
-      do
-        fields = Record.extract(unquote(record), unquote(opts))
-        the_record |> Everex.Util.record_to_struct(
-          fields, __MODULE__.unquote(mod)
-        )
-      end
-
       defmodule unquote(mod) do
         @derive [Access, Collectable]
-        defstruct Record.extract(unquote(record), unquote(opts))
+        defstruct unquote(fields)
 
-        Record.defrecord :record,
-          unquote(record),
-          Record.extract(unquote(record), unquote(opts))
+        Record.defrecord :record, unquote(tag), unquote(fields)
+      end
 
-        def to_record(map = %__MODULE__{}) do
-          map
-          |> Everex.Util.struct_to_record(
-              Record.extract(unquote(record), unquote(opts)),
-              unquote(record)
-          )
-        end
+      def to_record(map = %__MODULE__.unquote(mod){}) do
+        Everex.Util.struct_to_record(map, unquote(fields), unquote(tag))
+      end
+
+      def to_struct(record) when Record.is_record(record, unquote(tag))
+      do
+        Everex.Util.record_to_struct(
+          record, unquote(fields), __MODULE__.unquote(mod)
+        )
       end
     end
   end
