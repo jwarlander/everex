@@ -1,7 +1,7 @@
 ToDo
 ====
 
--   Make struct_to_record() handle embedded structs, direcly and in lists
+-   Test nested struct / record conversion, as well as in lists
 -   Do something useful when auth_token is missing in Client.new()
 -   Mock the Thrift calls for unit testing
 -   Add separate integration tests?
@@ -10,22 +10,3 @@ ToDo
     instead of {:ok, <response>}, and raise exceptions on errors
 -   Set up at least basic logging
 -   Consider wrapping EDAM results in maps
-
-Considerations
-==============
-
-A response can be:
-
--   basic type? int/binary/..
--   list of basic types?
--   record
--   list of records
-
-.. how to handle?
-
-A record can have:
-
--   a set of basic types
--   fields that are lists of basic types
--   fields that are records
--   fields that are lists of records

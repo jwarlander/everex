@@ -31,10 +31,10 @@ defmodule Everex.NoteStore do
                           max_notes \\ 100,
                           result_spec \\ %Types.NotesMetadataResultSpec{})
   do
-    response = GenServer.call(client, {:notestore, :findNotesMetadata, [
+    GenServer.call(client, {:notestore, :findNotesMetadata, [
         Types.to_record(filter), offset, max_notes,
         Types.to_record(result_spec)
-      ]})
+    ]})
   end
 
   def get_note(client,
@@ -44,9 +44,9 @@ defmodule Everex.NoteStore do
                with_resources_recognition \\ false,
                with_resources_alternate_data \\ false)
   do
-    response = GenServer.call(client, {:notestore, :getNote, [
+    GenServer.call(client, {:notestore, :getNote, [
         guid, with_content, with_resources_data, with_resources_recognition,
         with_resources_alternate_data
-      ]})
+    ]})
   end
 end

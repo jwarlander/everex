@@ -51,18 +51,30 @@ defmodule Everex.Util do
   defp r2s_process_list([head|tail], acc) when Record.is_record(head) do
     r2s_process_list(tail, [Evernote.EDAM.Types.to_struct(head)|acc])
   end
+  defp r2s_process_list([head|tail], acc) do
+    r2s_process_list(tail, [head|acc])
+  end
 
   def struct_to_record(the_struct, record_def, tag) do
-    # TODO: handle embedded structs, just like record_to_struct() above
     [ tag | do_struct_to_record(the_struct, record_def, []) ]
     |> List.to_tuple
   end
 
-  defp do_struct_to_record(_the_struct, [], acc) do
-    acc |> Enum.reverse
-  end
+  defp do_struct_to_record(_the_struct, [], acc), do: acc |> Enum.reverse
   defp do_struct_to_record(the_struct, [{key, :undefined}|tail], acc) do
     do_struct_to_record(the_struct, tail, [the_struct[key]|acc])
+  end
+  defp do_struct_to_record(the_struct, [{key, []}|tail], acc) do
+    value = s2r_process_list(the_struct[key], [])
+    do_struct_to_record(the_struct, tail, [value|acc])
+  end
+
+  defp s2r_process_list([], acc), do: Enum.reverse(acc)
+  defp s2r_process_list([head|tail], acc) when Record.is_record(head) do
+    s2r_process_list(tail, [Evernote.EDAM.Types.to_record(head)|acc])
+  end
+  defp s2r_process_list([head|tail], acc) do
+    s2r_process_list(tail, [head|acc])
   end
 
   defmacro deftype(mod, tag, fields) do
