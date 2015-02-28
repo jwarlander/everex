@@ -53,6 +53,7 @@ defmodule Everex.Util do
   end
 
   def struct_to_record(the_struct, record_def, tag) do
+    # TODO: handle embedded structs, just like record_to_struct() above
     [ tag | do_struct_to_record(the_struct, record_def, []) ]
     |> List.to_tuple
   end

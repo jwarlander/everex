@@ -35,10 +35,6 @@ defmodule Everex.NoteStore do
         Types.to_record(filter), offset, max_notes,
         Types.to_record(result_spec)
       ]})
-    case response do
-      {:ok, note} -> {:ok, Types.to_struct(note)}
-      error -> error
-    end
   end
 
   def get_note(client,
@@ -52,9 +48,5 @@ defmodule Everex.NoteStore do
         guid, with_content, with_resources_data, with_resources_recognition,
         with_resources_alternate_data
       ]})
-    case response do
-      {:ok, note} -> {:ok, Types.to_struct(note)}
-      error -> error
-    end
   end
 end

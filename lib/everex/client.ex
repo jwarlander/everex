@@ -15,6 +15,7 @@
 #
 defmodule Everex.Client do
   use GenServer
+  require Record
 
   defstruct auth_token: nil, server: nil, user_client: nil, note_client: nil
 
@@ -45,21 +46,18 @@ defmodule Everex.Client do
     {:ok, state} = connect(state)
     handle_call(call, from, state)
   end
-  def handle_call({:notestore, thrift_call, thrift_opts}, _from, state)
-  when is_atom(thrift_call) and is_list(thrift_opts)
+  def handle_call({:notestore, call, thrift_opts}, _from, state)
+  when is_atom(call) and is_list(thrift_opts)
   do
-    {new_client, response} = :thrift_client.call(
-      state.note_client, thrift_call, [state.auth_token | thrift_opts]
-    )
+    args = [state.auth_token | thrift_opts]
+    {new_client, response} = make_thrift_call(state.note_client, call, args)
     { :reply, response, %{state | note_client: new_client} }
   end
-
-  def handle_call({:userstore, thrift_call, thrift_opts}, _from, state)
-  when is_atom(thrift_call) and is_list(thrift_opts)
+  def handle_call({:userstore, call, thrift_opts}, _from, state)
+  when is_atom(call) and is_list(thrift_opts)
   do
-    {new_client, response} = :thrift_client.call(
-      state.user_client, thrift_call, [state.auth_token | thrift_opts]
-    )
+    args = [state.auth_token | thrift_opts]
+    {new_client, response} = make_thrift_call(state.user_client, call, args)
     { :reply, response, %{state | user_client: new_client} }
   end
 
@@ -92,5 +90,27 @@ defmodule Everex.Client do
     {:ok, transport} = :thrift_https_transport.new(srv, path)
     {:ok, protocol} = :thrift_binary_protocol.new(transport, [])
     :thrift_client.new(protocol, module)
+  end
+
+  defp make_thrift_call(client, call, args) do
+    :thrift_client.call(client, call, args)
+    |> process_thrift_response
+  end
+
+  defp process_thrift_response({client, {status, response}}) do
+    {client, {status, convert_response(response)}}
+  end
+
+  defp convert_response(value) when Record.is_record(value) do 
+    Evernote.EDAM.Types.to_struct(value)
+  end
+  defp convert_response(value) when is_list(value) do
+    convert_list(value, [])
+  end
+  defp convert_response(value), do: value
+
+  defp convert_list([], acc), do: Enum.reverse(acc)
+  defp convert_list([head|tail], acc) do
+    convert_list(tail, [convert_response(head)|acc])
   end
 end

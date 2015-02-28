@@ -17,7 +17,6 @@ defmodule EverexTest do
   use ExUnit.Case
 
   require Everex.NoteStore
-  require Record
 
   alias Everex.Client
   alias Everex.NoteStore
@@ -43,7 +42,7 @@ defmodule EverexTest do
       0 -> true
       _else -> 
         first = Enum.at(tags, 0)
-        assert Record.is_record(first, :Tag)
+        assert first.__struct__ == Evernote.EDAM.Types.Tag
     end
   end
 
@@ -54,7 +53,7 @@ defmodule EverexTest do
       0 -> true
       _else -> 
         first = Enum.at(notebooks, 0)
-        assert Record.is_record(first, :Notebook)
+        assert first.__struct__ == Evernote.EDAM.Types.Notebook
     end
   end
 
