@@ -1,6 +1,8 @@
 ToDo
 ====
 
+-   Investigate "bad return value" exit from GenServer on Thrift exception;
+    try `Everex.NoteStore.get_note(client, "f00f00")`
 -   Add documentation & push to Hex
 -   Clean up and consolidate record <-> struct conversion
 -   Create macro for defining Thrift calls?
