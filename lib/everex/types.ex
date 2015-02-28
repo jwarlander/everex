@@ -14,12 +14,12 @@
 # limitations under the License.
 #
 
-defmodule Evernote.EDAM.Types do
+defmodule Everex.Types do
   use Everex.Util
 
   defmacro __using__(_options) do
     quote do
-      alias Evernote.EDAM.Types
+      alias Everex.Types
       require Types.Note
     end
   end

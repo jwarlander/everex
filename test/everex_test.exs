@@ -42,7 +42,7 @@ defmodule EverexTest do
       0 -> true
       _else -> 
         first = Enum.at(tags, 0)
-        assert first.__struct__ == Evernote.EDAM.Types.Tag
+        assert first.__struct__ == Everex.Types.Tag
     end
   end
 
@@ -53,14 +53,14 @@ defmodule EverexTest do
       0 -> true
       _else -> 
         first = Enum.at(notebooks, 0)
-        assert first.__struct__ == Evernote.EDAM.Types.Notebook
+        assert first.__struct__ == Everex.Types.Notebook
     end
   end
 
   test "find note metadata" do
     {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
     {:ok, notes} = Everex.NoteStore.find_notes_metadata(client)
-    assert notes.__struct__ == Evernote.EDAM.Types.NotesMetadataList
+    assert notes.__struct__ == Everex.Types.NotesMetadataList
   end
 
   test "get note" do
@@ -70,6 +70,6 @@ defmodule EverexTest do
 
     {:ok, note} = NoteStore.get_note(client, notemeta.guid)
 
-    assert note.__struct__ == Evernote.EDAM.Types.Note
+    assert note.__struct__ == Everex.Types.Note
   end
 end

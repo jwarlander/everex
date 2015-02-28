@@ -15,7 +15,7 @@
 #
 defmodule EverexTypesTest do
   use ExUnit.Case
-  use Evernote.EDAM.Types
+  use Everex.Types
 
   test "note record is the same as a note struct" do
     note_record = Types.Note.record(title: "Foo Bar")

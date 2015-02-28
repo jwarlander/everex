@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 defmodule Everex.NoteStore do
+  use Everex.Types
   require Record
-  use Evernote.EDAM.Types
   import Everex.Client, only: [thrift_call: 3, thrift_call: 4]
 
   def list_notebooks(client) do

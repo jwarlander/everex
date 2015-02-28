@@ -34,7 +34,7 @@ defmodule Everex.Util do
   defp do_record_to_struct([value|vt], [{key,:undefined}|dt], acc)
   when Record.is_record(value)
   do
-    acc = struct(acc,[{key, Evernote.EDAM.Types.to_struct(value)}])
+    acc = struct(acc,[{key, Everex.Types.to_struct(value)}])
     do_record_to_struct(vt, dt, acc)
   end
   # value is list; process and convert contents to structs if needed
@@ -49,7 +49,7 @@ defmodule Everex.Util do
 
   defp r2s_process_list([], acc), do: Enum.reverse(acc)
   defp r2s_process_list([head|tail], acc) when Record.is_record(head) do
-    r2s_process_list(tail, [Evernote.EDAM.Types.to_struct(head)|acc])
+    r2s_process_list(tail, [Everex.Types.to_struct(head)|acc])
   end
   defp r2s_process_list([head|tail], acc) do
     r2s_process_list(tail, [head|acc])
@@ -71,7 +71,7 @@ defmodule Everex.Util do
 
   defp s2r_process_list([], acc), do: Enum.reverse(acc)
   defp s2r_process_list([head|tail], acc) when Record.is_record(head) do
-    s2r_process_list(tail, [Evernote.EDAM.Types.to_record(head)|acc])
+    s2r_process_list(tail, [Everex.Types.to_record(head)|acc])
   end
   defp s2r_process_list([head|tail], acc) do
     s2r_process_list(tail, [head|acc])

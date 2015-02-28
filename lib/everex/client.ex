@@ -17,6 +17,8 @@ defmodule Everex.Client do
   use GenServer
   require Record
 
+  alias Everex.Types
+
   defstruct auth_token: nil, server: nil, user_client: nil, note_client: nil
 
   @production_server "evernote.com"
@@ -108,7 +110,7 @@ defmodule Everex.Client do
   end
 
   defp convert_records(value) when Record.is_record(value) do 
-    Evernote.EDAM.Types.to_struct(value)
+    Types.to_struct(value)
   end
   defp convert_records(value) when is_list(value) do
     convert_records_in_list(value, [])
@@ -121,7 +123,7 @@ defmodule Everex.Client do
   end
 
   defp convert_structs(%{} = value) do 
-    Evernote.EDAM.Types.to_record(value)
+    Types.to_record(value)
   end
   defp convert_structs(value) when is_list(value) do
     convert_structs_in_list(value, [])
