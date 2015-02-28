@@ -22,6 +22,8 @@ defmodule Everex.Client do
   @production_server "evernote.com"
   @sandbox_server "sandbox.evernote.com"
 
+  @timeout 20_000
+
   ## Client API
 
   def new(auth_token, opts \\ []) do
@@ -31,6 +33,10 @@ defmodule Everex.Client do
     end
     state = %__MODULE__{auth_token: auth_token, server: srv}
     GenServer.start(__MODULE__, state)
+  end
+
+  def thrift_call(client, service, call, args \\ [], timeout \\ @timeout) do
+    GenServer.call(client, {service, call, convert_structs(args)}, timeout)
   end
 
   ## Server Callbacks
@@ -98,19 +104,32 @@ defmodule Everex.Client do
   end
 
   defp process_thrift_response({client, {status, response}}) do
-    {client, {status, convert_response(response)}}
+    {client, {status, convert_records(response)}}
   end
 
-  defp convert_response(value) when Record.is_record(value) do 
+  defp convert_records(value) when Record.is_record(value) do 
     Evernote.EDAM.Types.to_struct(value)
   end
-  defp convert_response(value) when is_list(value) do
-    convert_list(value, [])
+  defp convert_records(value) when is_list(value) do
+    convert_records_in_list(value, [])
   end
-  defp convert_response(value), do: value
+  defp convert_records(value), do: value
 
-  defp convert_list([], acc), do: Enum.reverse(acc)
-  defp convert_list([head|tail], acc) do
-    convert_list(tail, [convert_response(head)|acc])
+  defp convert_records_in_list([], acc), do: Enum.reverse(acc)
+  defp convert_records_in_list([head|tail], acc) do
+    convert_records_in_list(tail, [convert_records(head)|acc])
+  end
+
+  defp convert_structs(%{} = value) do 
+    Evernote.EDAM.Types.to_record(value)
+  end
+  defp convert_structs(value) when is_list(value) do
+    convert_structs_in_list(value, [])
+  end
+  defp convert_structs(value), do: value
+
+  defp convert_structs_in_list([], acc), do: Enum.reverse(acc)
+  defp convert_structs_in_list([head|tail], acc) do
+    convert_structs_in_list(tail, [convert_structs(head)|acc])
   end
 end

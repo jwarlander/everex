@@ -16,13 +16,14 @@
 defmodule Everex.NoteStore do
   require Record
   use Evernote.EDAM.Types
+  import Everex.Client, only: [thrift_call: 3, thrift_call: 4]
 
   def list_notebooks(client) do
-    GenServer.call(client, {:notestore, :listNotebooks, []})
+    thrift_call(client, :notestore, :listNotebooks)
   end
 
   def list_tags(client) do
-    GenServer.call(client, {:notestore, :listTags, []})
+    thrift_call(client, :notestore, :listTags)
   end
 
   def find_notes_metadata(client,
@@ -31,10 +32,9 @@ defmodule Everex.NoteStore do
                           max_notes \\ 100,
                           result_spec \\ %Types.NotesMetadataResultSpec{})
   do
-    GenServer.call(client, {:notestore, :findNotesMetadata, [
-        Types.to_record(filter), offset, max_notes,
-        Types.to_record(result_spec)
-    ]})
+    thrift_call(client, :notestore, :findNotesMetadata, [
+        filter, offset, max_notes, result_spec
+    ])
   end
 
   def get_note(client,
@@ -44,9 +44,9 @@ defmodule Everex.NoteStore do
                with_resources_recognition \\ false,
                with_resources_alternate_data \\ false)
   do
-    GenServer.call(client, {:notestore, :getNote, [
+    thrift_call(client, :notestore, :getNote, [
         guid, with_content, with_resources_data, with_resources_recognition,
         with_resources_alternate_data
-    ]})
+    ])
   end
 end
