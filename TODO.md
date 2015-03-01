@@ -1,6 +1,8 @@
 ToDo
 ====
 
+-   Handle the `errorCode` field of exceptions; see ERRORS_EDAMERRORCODE_*
+    in errors_types.hrl.. can we give something better than just the number?
 -   Investigate "bad return value" exit from GenServer on Thrift exception;
     try `Everex.NoteStore.get_note(client, "f00f00")`
 -   Add documentation & push to Hex

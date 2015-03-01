@@ -72,4 +72,12 @@ defmodule EverexTest do
 
     assert note.__struct__ == Everex.Types.Note
   end
+
+  test "invalid note guid returns exception" do
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    response = NoteStore.get_note(client, "bad_guid")
+    assert response == { :exception,
+      %Everex.Types.EDAMUserException{errorCode: 2, parameter: "Note.guid"}
+    }
+  end
 end
