@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 0.0.3
+
+* Enhancements
+  * Handle Thrift exceptions by returning {:exception, the_exception} instead
+    of generating a cryptic "bad return value" exit from GenServer.call
+
 ## 0.0.2
 
 * Enhancements
