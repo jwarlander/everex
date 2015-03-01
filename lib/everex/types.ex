@@ -117,4 +117,13 @@ defmodule Everex.Types do
   deftype PublicUserInfo, :PublicUserInfo,
     Record.extract(:PublicUserInfo, from: "include/user_store_types.hrl")
 
+  # Errors
+  #
+  deftype EDAMNotFoundException, :EDAMNotFoundException,
+    Record.extract(:EDAMNotFoundException, from: "include/errors_types.hrl")
+  deftype EDAMSystemException, :EDAMSystemException,
+    Record.extract(:EDAMSystemException, from: "include/errors_types.hrl")
+  deftype EDAMUserException, :EDAMUserException,
+    Record.extract(:EDAMUserException, from: "include/errors_types.hrl")
+
 end

@@ -101,7 +101,12 @@ defmodule Everex.Client do
   end
 
   defp make_thrift_call(client, call, args) do
-    :thrift_client.call(client, call, args)
+    try do
+      :thrift_client.call(client, call, args)
+    catch
+      {new_client, {:exception, what}} ->
+        {new_client, {:exception, what}}
+    end
     |> process_thrift_response
   end
 
