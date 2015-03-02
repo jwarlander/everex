@@ -1,7 +1,4 @@
-Everex
-======
-
-Evernote API client for Elixir. Uses a modified version of the
+Everex is an Evernote API client for Elixir. It uses a modified version of the
 [Erlang Thrift library](https://github.com/apache/thrift/tree/master/lib/erl),
 together with compiled output from the
 [Evernote Cloud API IDL files](https://github.com/evernote/evernote-thrift).
