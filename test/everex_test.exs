@@ -16,10 +16,9 @@
 defmodule EverexTest do
   use ExUnit.Case
 
-  require Everex.NoteStore
-
   alias Everex.Client
   alias Everex.NoteStore
+  alias Everex.Types
 
   @developer_token System.get_env("EN_DEVELOPER_TOKEN")
 
@@ -39,20 +38,20 @@ defmodule EverexTest do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
     {:ok, tags} = NoteStore.list_tags(client)
     first = Enum.at(tags, 0)
-    assert %Everex.Types.Tag{} = first
+    assert %Types.Tag{} = first
   end
 
   test "list notebooks" do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
     {:ok, notebooks} = NoteStore.list_notebooks(client)
     first = Enum.at(notebooks, 0)
-    assert %Everex.Types.Notebook{} = first
+    assert %Types.Notebook{} = first
   end
 
   test "find note metadata" do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
     {:ok, notes} = NoteStore.find_notes_metadata(client)
-    assert %Everex.Types.NotesMetadataList{} = notes
+    assert %Types.NotesMetadataList{} = notes
   end
 
   test "get note" do
@@ -62,14 +61,14 @@ defmodule EverexTest do
 
     {:ok, note} = NoteStore.get_note(client, notemeta.guid)
 
-    assert %Everex.Types.Note{} = note
+    assert %Types.Note{} = note
   end
 
   test "invalid note guid returns exception" do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
     response = NoteStore.get_note(client, "bad_guid")
     assert response == { :exception,
-      %Everex.Types.EDAMUserException{errorCode: 2, parameter: "Note.guid"}
+      %Types.EDAMUserException{errorCode: 2, parameter: "Note.guid"}
     }
   end
 end
