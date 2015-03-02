@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jwarlander/everex.svg?branch=master)](https://travis-ci.org/jwarlander/everex)
+
 Everex is an Evernote API client for Elixir. It uses a modified version of the
 [Erlang Thrift library](https://github.com/apache/thrift/tree/master/lib/erl),
 together with compiled output from the
