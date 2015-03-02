@@ -24,7 +24,7 @@ defmodule EverexTest do
   @developer_token System.get_env("EN_DEVELOPER_TOKEN")
 
   test "retrieve notestore url using our API" do
-    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
 
     {:ok, url} = GenServer.call(
       client, {:userstore, :getNoteStoreUrl, []}
@@ -36,31 +36,23 @@ defmodule EverexTest do
   end
 
   test "list tags" do
-    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
-    {:ok, tags} = Everex.NoteStore.list_tags(client)
-    case Enum.count(tags) do
-      0 -> true
-      _else -> 
-        first = Enum.at(tags, 0)
-        assert first.__struct__ == Everex.Types.Tag
-    end
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    {:ok, tags} = NoteStore.list_tags(client)
+    first = Enum.at(tags, 0)
+    assert %Everex.Types.Tag{} = first
   end
 
   test "list notebooks" do
-    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
-    {:ok, notebooks} = Everex.NoteStore.list_notebooks(client)
-    case Enum.count(notebooks) do
-      0 -> true
-      _else -> 
-        first = Enum.at(notebooks, 0)
-        assert first.__struct__ == Everex.Types.Notebook
-    end
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    {:ok, notebooks} = NoteStore.list_notebooks(client)
+    first = Enum.at(notebooks, 0)
+    assert %Everex.Types.Notebook{} = first
   end
 
   test "find note metadata" do
-    {:ok, client} = Everex.Client.new(@developer_token, sandbox: true)
-    {:ok, notes} = Everex.NoteStore.find_notes_metadata(client)
-    assert notes.__struct__ == Everex.Types.NotesMetadataList
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    {:ok, notes} = NoteStore.find_notes_metadata(client)
+    assert %Everex.Types.NotesMetadataList{} = notes
   end
 
   test "get note" do
@@ -70,7 +62,7 @@ defmodule EverexTest do
 
     {:ok, note} = NoteStore.get_note(client, notemeta.guid)
 
-    assert note.__struct__ == Everex.Types.Note
+    assert %Everex.Types.Note{} = note
   end
 
   test "invalid note guid returns exception" do
