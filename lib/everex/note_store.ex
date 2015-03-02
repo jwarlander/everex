@@ -18,14 +18,26 @@ defmodule Everex.NoteStore do
   require Record
   import Everex.Client, only: [thrift_call: 3, thrift_call: 4]
 
+  @doc """
+  Lists all the notebooks in the Evernote account.
+  """
   def list_notebooks(client) do
     thrift_call(client, :notestore, :listNotebooks)
   end
 
+  @doc """
+  Lists all the tags in the Evernote account.
+  """
   def list_tags(client) do
     thrift_call(client, :notestore, :listTags)
   end
 
+  @doc """
+  Finds notes based on the given filter, with pagination support handled
+  by an offset and a limit on max notes returned. By default, all notes
+  will be found (empty note filter) and only the guid is returned for each
+  result (empty notes metadata result specification).
+  """
   def find_notes_metadata(client,
                           filter \\ %Types.NoteFilter{},
                           offset \\ 0,
@@ -37,6 +49,9 @@ defmodule Everex.NoteStore do
     ])
   end
 
+  @doc """
+  Retrieves a single note given its guid.
+  """
   def get_note(client,
                guid,
                with_content \\ false,

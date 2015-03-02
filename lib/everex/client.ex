@@ -28,6 +28,10 @@ defmodule Everex.Client do
 
   ## Client API
 
+  @doc """
+  Starts a new client. To connect to the Evernote Sandbox, pass the
+  `sandbox: true` option.
+  """
   def new(auth_token, opts \\ []) do
     srv = case opts[:sandbox] do
       true -> @sandbox_server
@@ -37,6 +41,11 @@ defmodule Everex.Client do
     GenServer.start(__MODULE__, state)
   end
 
+  @doc """
+  Makes a call to the underlying Thrift service. Normally used only by
+  the Everex API calls, but may also be useful if a particular Evernote
+  Thrift function isn't yet implemented.
+  """
   def thrift_call(client, service, call, args \\ [], timeout \\ @timeout) do
     GenServer.call(client, {service, call, convert_structs(args)}, timeout)
   end

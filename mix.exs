@@ -5,6 +5,9 @@ defmodule Everex.Mixfile do
     [
       app: :everex,
       version: "0.0.3",
+      name: "Everex",
+      source_url: "https://github.com/jwarlander/everex",
+      homepage_url: "https://github.com/jwarlander/everex",
       elixir: "~> 1.0",
       description: """
       Evernote API client for Elixir
@@ -42,6 +45,9 @@ defmodule Everex.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [ ]
+    [
+      {:earmark, "~> 0.1", only: :dev},
+      {:ex_doc, "~> 0.7", only: :dev},
+    ]
   end
 end
