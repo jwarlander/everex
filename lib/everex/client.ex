@@ -32,7 +32,7 @@ defmodule Everex.Client do
   Starts a new client. To connect to the Evernote Sandbox, pass the
   `sandbox: true` option.
   """
-  def new(auth_token, opts \\ []) do
+  def new(auth_token, opts \\ []) when is_binary(auth_token) do
     srv = case opts[:sandbox] do
       true -> @sandbox_server
       _else -> @production_server
