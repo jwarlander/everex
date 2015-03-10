@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 0.1.0
+
+* Enhancements
+  * OAuth example in `examples/oauth.exs`
+  * Simple note listing example in `examples/listnotes.exs`
+
+* Bug Fixes
+  * Everex.Client.new/2 now properly fails to match on `nil` authentication token
+
 ## 0.0.3
 
 * Enhancements

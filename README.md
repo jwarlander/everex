@@ -22,9 +22,11 @@ or a [developer token](https://sandbox.evernote.com/api/DeveloperToken.action).
 Everex now represents Thrift data structures as `structs`, to keep client usage
 idiomatic and the data more self-explanatory. See examples below.
 
-_Everex doesn't help at all with the OAuth process for getting access to
-accounts; you'll have to solve that yourself, for the time being, and then
-just supply the authentication token when creating the client connection._
+_**UPDATE:** There is now an example showing how to get access using the OAuth
+authentication process. See `examples/oauth.exs`. This requires having an
+[API key](https://dev.evernote.com/doc/articles/authentication.php), of course,
+and exporting the environment variables EN_CONSUMER_KEY / EN_CONSUMER_SECRET
+before running the example._
 
 Usage
 -----
@@ -33,7 +35,7 @@ Add Everex to your dependencies in `mix.exs`:
 
 ```elixir
   defp deps do
-    [{:everex, "~> 0.0.3"}]
+    [{:everex, "~> 0.1.0"}]
   end
 ```
 

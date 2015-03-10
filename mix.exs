@@ -4,7 +4,7 @@ defmodule Everex.Mixfile do
   def project do
     [
       app: :everex,
-      version: "0.0.3",
+      version: "0.1.0",
       name: "Everex",
       source_url: "https://github.com/jwarlander/everex",
       homepage_url: "https://github.com/jwarlander/everex",
@@ -15,6 +15,9 @@ defmodule Everex.Mixfile do
       NOTE: Everex is UNDER DEVELOPMENT, and is NOT ready for production use.
       Feedback and contributions (via pull requests) are very welcome, of
       course!
+
+      UPDATE: There is now an example showing how to get access using the
+      OAuth authentication process. See `examples/oauth.exs`.
       """,
       package: [
         contributors: ["Johan Wärlander"],
