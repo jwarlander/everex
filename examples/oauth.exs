@@ -56,9 +56,14 @@ defmodule OAuth.CallbackHandler do
   use Plug.Router
 
   def start do
-    Plug.Adapters.Cowboy.http(OAuth.CallbackHandler, nil, port: 4000)
+    Plug.Adapters.Cowboy.http(__MODULE__, nil, port: 4000)
   end
 
+  def shutdown do
+    Plug.Adapters.Cowboy.shutdown(OAuth.CallbackHandler.HTTP)
+  end
+
+  plug Plug.Logger
   plug :match
   plug :dispatch
 
@@ -67,6 +72,7 @@ defmodule OAuth.CallbackHandler do
     |> Plug.Conn.fetch_params
     |> process_params
     |> respond
+    shutdown
   end
 
   def process_params(conn) do
@@ -106,11 +112,14 @@ defmodule ListNotesOauth do
         IO.puts("\nPlease visit:")
         IO.puts("  #{authorization_url}")
 
-        OAuth.CallbackHandler.start
+        {:ok, pid} = OAuth.CallbackHandler.start
+        Process.monitor(pid)
 
-        IO.puts("\nWaiting for 60 seconds..")
+        IO.puts("\nLocal OAuth callback server started.")
+        IO.puts("Waiting for authentication to finish; press CTRL-C to abort.")
         receive do
-        after 60_000 -> :timeout
+          {:DOWN, _, :process, ^pid, :shutdown} -> :ok
+          msg -> IO.puts("ERROR: #{msg}")
         end
       true ->
         IO.puts("Already authenticated, proceeding.")
