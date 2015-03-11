@@ -15,13 +15,14 @@
 #
 defmodule Everex.Client do
   use GenServer
+  require Logger
   require Record
 
   alias Everex.Types
 
   defstruct auth_token: nil, server: nil, user_client: nil, note_client: nil
 
-  @production_server "evernote.com"
+  @production_server "www.evernote.com"
   @sandbox_server "sandbox.evernote.com"
 
   @timeout 20_000
@@ -53,6 +54,7 @@ defmodule Everex.Client do
   ## Server Callbacks
 
   def init(state = %__MODULE__{server: srv}) do
+    Logger.debug("Initializing User Store Client (#{srv}: /edam/user)")
     {:ok, client} = thrift_client_util(srv, "/edam/user", :user_store_thrift)
     { :ok, %{state | user_client: client} }
   end
