@@ -4,7 +4,7 @@ defmodule Everex.Mixfile do
   def project do
     [
       app: :everex,
-      version: "0.1.0",
+      version: "0.1.1",
       name: "Everex",
       source_url: "https://github.com/jwarlander/everex",
       homepage_url: "https://github.com/jwarlander/everex",

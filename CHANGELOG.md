@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 0.1.1
+
+* Bug Fixes
+  * Fix servername for production access
+
 ## 0.1.0
 
 * Enhancements
