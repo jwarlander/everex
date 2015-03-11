@@ -75,6 +75,10 @@ defmodule OAuth.CallbackHandler do
     shutdown
   end
 
+  match _ do
+    send_resp(conn, 404, "Nothing to see here.")
+  end
+
   def process_params(conn) do
     result = OAuth.request_final_token(
       conn.params["oauth_token"],
