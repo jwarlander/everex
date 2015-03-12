@@ -21,7 +21,7 @@ defmodule ListNotes do
     # Find the longest title
     max_length = notes |> Enum.reduce(0, fn(n, l) -> max(l, String.length(n.title)) end)
     # Make a format string using max_length
-    fmt = "~-#{max_length}s | ~s~n"
+    fmt = "~-#{max_length}ts | ~s~n"
     # Print all the note titles along with their guids
     notes |> Enum.map(fn x -> :io.format(fmt, [x.title, x.guid]) end)
   end
