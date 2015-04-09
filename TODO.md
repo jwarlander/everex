@@ -1,6 +1,7 @@
 ToDo
 ====
 
+-   Look at using https://github.com/dantswain/thrift_ex somehow
 -   Include OAuth helpers in main lib; look at other EN APIs for examples
 -   Documentation on personal use with Developer Tokens for sandbox + prod
 -   Handle the `errorCode` field of exceptions; see ERRORS_EDAMERRORCODE_*
