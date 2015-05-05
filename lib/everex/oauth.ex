@@ -1,6 +1,20 @@
-defmodule Everex.OAuth do
+defmodule Everex.OAuth.Client do
+
+  @production_server "www.evernote.com"
+  @sandbox_server "sandbox.evernote.com"
+
+  defstruct server: nil
+
   defmodule Request do
     defstruct url: nil, headers: nil, params: nil
+  end
+
+  def new(opts \\ []) do
+    srv = case opts[:sandbox] do
+      true -> @sandbox_server
+      _else -> @production_server
+    end
+    state = %__MODULE__{server: srv}
   end
 
   def make_authorization_url(temp_token) do
@@ -8,7 +22,7 @@ defmodule Everex.OAuth do
     url <> temp_token
   end
 
-  def request_temporary_token do
+  def request_temporary_token(client = %__MODULE__{server: srv}) do
     oauth_creds = OAuther.credentials([
       consumer_key: System.get_env("EN_CONSUMER_KEY"),
       consumer_secret: System.get_env("EN_CONSUMER_SECRET"),
@@ -16,7 +30,7 @@ defmodule Everex.OAuth do
     ])
 
     req_params = [{"oauth_callback", "http://localhost:4000/oauth_callback"}]
-    req_url = "https://sandbox.evernote.com/oauth"
+    req_url = "https://#{srv}/oauth"
 
     req = sign_request("get", req_url, req_params, oauth_creds)
     response = HTTPoison.get!(req.url, req.headers, req.params)
@@ -26,7 +40,9 @@ defmodule Everex.OAuth do
     ) |> Map.fetch!("oauth_token")
   end
 
-  def request_final_token(token, verifier) do
+  def request_final_token(client = %__MODULE__{server: srv}, token,
+                          verifier)
+  do
     oauth_creds = OAuther.credentials([
       consumer_key: System.get_env("EN_CONSUMER_KEY"),
       consumer_secret: System.get_env("EN_CONSUMER_SECRET"),
@@ -35,7 +51,7 @@ defmodule Everex.OAuth do
     ])
 
     req_params = [{"oauth_verifier", verifier}]
-    req_url = "https://sandbox.evernote.com/oauth"
+    req_url = "https://#{srv}/oauth"
 
     req = sign_request("get", req_url, req_params, oauth_creds)
     response = HTTPoison.get!(req.url, req.headers, req.params)
@@ -81,7 +97,9 @@ defmodule Everex.OAuth.CallbackHandler do
   end
 
   def process_params(conn) do
-    result = OAuth.request_final_token(
+    client = OAuth.Client.new(sandbox: true)
+    result = OAuth.Client.request_final_token(
+      client,
       conn.params["oauth_token"],
       conn.params["oauth_verifier"]
     ) |> decode_result

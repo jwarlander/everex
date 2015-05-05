@@ -3,9 +3,12 @@ defmodule ListNotesOauth do
 
   def run do
     case File.exists?(".en_auth") do
+      true ->
+        IO.puts("Already authenticated, proceeding.")
       false ->
-        temp_token = OAuth.request_temporary_token
-        authorization_url = OAuth.make_authorization_url(temp_token)
+        authorization_url = OAuth.Client.new(sandbox: true)
+                            |> OAuth.Client.request_temporary_token
+                            |> OAuth.Client.make_authorization_url
 
         IO.puts("\nPlease visit:")
         IO.puts("  #{authorization_url}")
@@ -19,8 +22,6 @@ defmodule ListNotesOauth do
           {:DOWN, _, :process, ^pid, :shutdown} -> :ok
           msg -> IO.puts("ERROR: #{msg}")
         end
-      true ->
-        IO.puts("Already authenticated, proceeding.")
     end
 
 
