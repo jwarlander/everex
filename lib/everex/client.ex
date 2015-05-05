@@ -54,27 +54,22 @@ defmodule Everex.Client do
   ## Server Callbacks
 
   def init(state = %__MODULE__{server: srv}) do
-    Logger.debug("Initializing User Store Client (#{srv}: /edam/user)")
-    {:ok, client} = thrift_client_util(srv, "/edam/user", :user_store_thrift)
-    { :ok, %{state | user_client: client} }
+    { :ok, state}
   end
 
-  def handle_call(call = {:notestore, _, _}, from,
-                  state = %__MODULE__{note_client: nil})
-  do
-    {:ok, state} = connect(state)
-    handle_call(call, from, state)
-  end
   def handle_call({:notestore, call, thrift_opts}, _from, state)
   when is_atom(call) and is_list(thrift_opts)
   do
+    state = connect(state)
     args = [state.auth_token | thrift_opts]
     {new_client, response} = make_thrift_call(state.note_client, call, args)
     { :reply, response, %{state | note_client: new_client} }
   end
+
   def handle_call({:userstore, call, thrift_opts}, _from, state)
   when is_atom(call) and is_list(thrift_opts)
   do
+    state = connect(state)
     args = [state.auth_token | thrift_opts]
     {new_client, response} = make_thrift_call(state.user_client, call, args)
     { :reply, response, %{state | user_client: new_client} }
@@ -82,7 +77,24 @@ defmodule Everex.Client do
 
   ## Private Functions
 
-  defp connect(state = %__MODULE__{user_client: user_client}) do
+  defp connect(state) do
+    state
+    |> connect_user_store
+    |> connect_note_store
+  end
+
+  defp connect_user_store(state = %__MODULE__{server: srv,
+                                              user_client: nil})
+  do
+    Logger.debug("Connecting User Store Client (#{srv}: /edam/user)")
+    {:ok, client} = thrift_client_util(srv, "/edam/user", :user_store_thrift)
+    %{state | user_client: client}
+  end
+  defp connect_user_store(state = %__MODULE__{}), do: state
+
+  defp connect_note_store(state = %__MODULE__{user_client: user_client,
+                                              note_client: nil})
+  do
     response = :thrift_client.call(
       user_client, :getNoteStoreUrl, [state.auth_token]
     )
@@ -93,11 +105,13 @@ defmodule Everex.Client do
         {:ok, note_client} = thrift_client_util(
           srv, "/shard/" <> path, :note_store_thrift
         )
-        { :ok, %{state | user_client: user_client, note_client: note_client} }
+        %{state | user_client: user_client, note_client: note_client}
       {user_client, error} ->
-        { :error, %{state | user_client: user_client}, error}
+        Logger.error("Unable to get Note Store URL: #{inspect error}")
+        %{state | user_client: user_client}
     end
   end
+  defp connect_note_store(state = %__MODULE__{}), do: state
 
   defp thrift_client_util(srv, path, module) when is_binary(srv) do
     thrift_client_util(String.to_char_list(srv), path, module)
