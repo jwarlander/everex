@@ -71,4 +71,10 @@ defmodule EverexTest do
       %Types.EDAMUserException{errorCode: 2, parameter: "Note.guid"}
     }
   end
+
+  test "create notebook" do
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    {:ok, notebook} = NoteStore.create_notebook(client, "Elixir Notebook")
+    assert "Elixir Notebook" = notebook.name
+  end
 end

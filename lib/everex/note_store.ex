@@ -64,4 +64,18 @@ defmodule Everex.NoteStore do
         with_resources_alternate_data
     ])
   end
+
+  @doc"""
+  Creates a single notebook
+  """
+  def create_notebook(client,
+                      name,
+                      default_notebook \\ false,
+                      stack \\ :undefined)
+  do
+    draft_notebook = %Types.Notebook{name: name, 
+                                     defaultNotebook: default_notebook,
+                                     stack: stack}
+    thrift_call(client, :notestore, :createNotebook, [draft_notebook])
+  end
 end
