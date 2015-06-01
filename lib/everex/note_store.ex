@@ -68,14 +68,8 @@ defmodule Everex.NoteStore do
   @doc"""
   Creates a single notebook
   """
-  def create_notebook(client,
-                      name,
-                      default_notebook \\ false,
-                      stack \\ :undefined)
-  do
-    draft_notebook = %Types.Notebook{name: name, 
-                                     defaultNotebook: default_notebook,
-                                     stack: stack}
+  def create_notebook(client, notebook) do
+    draft_notebook = struct(Types.Notebook, Map.to_list(notebook))
     thrift_call(client, :notestore, :createNotebook, [draft_notebook])
   end
 end

@@ -19,6 +19,7 @@ defmodule EverexTest do
   alias Everex.Client
   alias Everex.NoteStore
   alias Everex.Types
+  alias Everex.Api.Notebook
 
   @developer_token System.get_env("EN_DEVELOPER_TOKEN")
 
@@ -74,7 +75,9 @@ defmodule EverexTest do
 
   test "create notebook" do
     {:ok, client} = Client.new(@developer_token, sandbox: true)
-    {:ok, notebook} = NoteStore.create_notebook(client, "Elixir Notebook")
-    assert "Elixir Notebook" = notebook.name
+    {:ok, notebook} = Notebook.new("SadBoys")
+                      |> Notebook.is_default(false)
+                      |> Notebook.save(client)
+    assert "SadBoys" = notebook.name
   end
 end
