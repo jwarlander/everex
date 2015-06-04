@@ -64,4 +64,12 @@ defmodule Everex.NoteStore do
         with_resources_alternate_data
     ])
   end
+
+  @doc"""
+  Creates a single notebook
+  """
+  def create_notebook(client, notebook) do
+    draft_notebook = struct(Types.Notebook, Map.to_list(notebook))
+    thrift_call(client, :notestore, :createNotebook, [draft_notebook])
+  end
 end

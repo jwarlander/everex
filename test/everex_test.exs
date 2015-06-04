@@ -19,6 +19,7 @@ defmodule EverexTest do
   alias Everex.Client
   alias Everex.NoteStore
   alias Everex.Types
+  alias Everex.Api.Notebook
 
   @developer_token System.get_env("EN_DEVELOPER_TOKEN")
 
@@ -70,5 +71,13 @@ defmodule EverexTest do
     assert response == { :exception,
       %Types.EDAMUserException{errorCode: 2, parameter: "Note.guid"}
     }
+  end
+
+  test "create notebook" do
+    {:ok, client} = Client.new(@developer_token, sandbox: true)
+    {:ok, notebook} = Notebook.new("SadBoys")
+                      |> Notebook.is_default(false)
+                      |> Notebook.save(client)
+    assert "SadBoys" = notebook.name
   end
 end
