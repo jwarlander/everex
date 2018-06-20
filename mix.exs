@@ -53,7 +53,7 @@ defmodule Everex.Mixfile do
       {:ex_doc, "~> 0.7", only: :dev},
       {:oauther, "~> 1.0.1"},
       {:httpoison, "~> 0.6.2"},
-      {:cowboy, "~> 1.0.0"},
+      {:cowboy, "~> 1.1.2"},
       {:plug, "~> 0.11.1"},
     ]
   end
