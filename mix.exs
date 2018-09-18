@@ -52,7 +52,7 @@ defmodule Everex.Mixfile do
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.7", only: :dev},
       {:oauther, "~> 1.0.1"},
-      {:httpoison, "~> 0.6.2"},
+      {:httpoison, "~> 1.3.1"},
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 0.11.1"},
     ]
